@@ -1,0 +1,16 @@
+{
+  "name": "plitter",
+  "module": "index.js",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "author": { "name": "elarle" },
+  "dependencies": {
+    "inquirer": "^12.2.0",
+    "pdf-lib": "^1.17.1"
+  }
+}
