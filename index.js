@@ -3,6 +3,9 @@ import fs from "fs"
 import { PDFDocument, BlendMode } from "pdf-lib"
 import inquirer from "inquirer"
 
+const DEFAULT_CONFIG = {output_file: "output.pdf", primera: {x: 0, y: 0}, segunda: {x: 0, y: 0}}
+var config = DEFAULT_CONFIG
+
 async function split_pdf(pdf_file, output_file){
 
    const pdf_bytes = fs.readFileSync(pdf_file)
@@ -19,15 +22,15 @@ async function split_pdf(pdf_file, output_file){
    const bottom_right_page = new_pdf.addPage([width/2, height/2])
 
    top_page.drawPage(new_page_dim, {
-      x: 0,
-      y: -height/2,
+      x: 0 + config.primera.x,
+      y: -height/2 + config.primera.y,
       width: width,
       height: height,
    })
 
    bottom_right_page.drawPage(new_page_dim, {
-      x: -width/2,
-      y: 0,
+      x: -width/2 + config.segunda.x,
+      y: 0 + config.segunda.y,
       width: width,
       height: height,
    })
@@ -55,13 +58,11 @@ async function show_files_menu(file_to_show) {
 function ensure_config(){
    if(!fs.existsSync("config.json")){
       console.log("Creando configuración nueva en: config.json")
-      fs.writeFileSync("config.json", JSON.stringify({output_file: "output.pdf"}))
+      fs.writeFileSync("config.json", JSON.stringify(DEFAULT_CONFIG, null, 3))
    }
 }
 
 ensure_config()
-
-var config = {output_file: "output.pdf"} 
 
 try{
    config = await Bun.file("config.json").json()
@@ -69,6 +70,8 @@ try{
    console.error("Error al cargar la configuración (config.json). Elimínela")
    process.exit(0)
 }
+
+console.log(config)
 
 const file_to_split = await show_files_menu(fs.readdirSync(".").filter(file => file.toLocaleLowerCase().endsWith("pdf")))
 

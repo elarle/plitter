@@ -1,1 +1,11 @@
-{"output_file":"output.pdf"}
+{
+   "output_file": "output.pdf",
+   "primera": {
+      "x": 0,
+      "y": 0
+   },
+   "segunda": {
+      "x": 0,
+      "y": 0
+   }
+}
