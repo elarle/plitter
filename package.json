@@ -12,5 +12,9 @@
   "dependencies": {
     "inquirer": "^12.2.0",
     "pdf-lib": "^1.17.1"
+  },
+  "scripts": {
+    "compile-win": "bun build --compile --minify --target=bun-windows-x64 index.js"
   }
+  
 }
