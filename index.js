@@ -66,18 +66,23 @@ ensure_config()
 
 try{
    config = await Bun.file("config.json").json()
+   if(config.primera == undefined){
+      console.log("Configuración desactualizada. Migrando a una nueva versión")
+      fs.writeFileSync("config.json", JSON.stringify(DEFAULT_CONFIG, null, 3))
+      config = DEFAULT_CONFIG;
+   }
 } catch (err) {
    console.error("Error al cargar la configuración (config.json). Elimínela")
+   await Bun.sleep(3000);
    process.exit(0)
 }
-
-console.log(config)
 
 const file_to_split = await show_files_menu(fs.readdirSync(".").filter(file => file.toLocaleLowerCase().endsWith("pdf")))
 
 await split_pdf(file_to_split, config.output_file)
 
 console.log("Resultado en:", config.output_file)
+
 process.exit(0)
 
 
