@@ -1,0 +1,32 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: Setup Bun
+  # You may pin to the exact commit or the version.
+  # uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+          # Disable caching of bun executable.
+          no-cache: true
+    
+      - uses: actions/checkout@v3
+      - name: Build the app
+        run: |
+          bun run compile-win
+          
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/plitter.exe
+          asset_name: plitter.exe
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Build from github actions"
+      - run: echo "🍏 This job's status is ${{ job.status }}."
