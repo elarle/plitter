@@ -3,12 +3,13 @@ run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
   build-and-release:
+    permissions:
+      contents: write
+
     runs-on: ubuntu-latest
-    steps:
-      
+    steps:      
+    
       - name: Setup Bun
-  # You may pin to the exact commit or the version.
-  # uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
