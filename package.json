@@ -14,7 +14,8 @@
     "pdf-lib": "^1.17.1"
   },
   "scripts": {
-    "compile-win": "bun build --compile --minify --target=bun-windows-x64 index.js"
+    "compile-win": "mkdir -p build && bun build --compile --minify --target=bun-windows-x64 src/main.js --outfile build/plitter.exe",
+    "main": "bun src/main.js"
   }
   
 }
