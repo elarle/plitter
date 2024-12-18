@@ -18,6 +18,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build the app
         run: |
+          bun install
           bun run compile-win
           
       - name: Upload binaries to release
