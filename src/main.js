@@ -2,10 +2,13 @@ import fs from "fs"
 
 import { PDFDocument } from "pdf-lib"
 import inquirer from "inquirer"
+import { confirm } from "@inquirer/prompts"
 
 const DEFAULT_CONFIG = {output_file: "output.pdf", primera: {x: 0, y: 0}, segunda: {x: 0, y: 0}}
 
 var config = DEFAULT_CONFIG
+
+var INCLUDE_SECOND_PART = false
 
 /**
  * Splits a pdf in two halves
@@ -41,7 +44,6 @@ async function split_pdf(pdf_file, output_file){
 
    //Create new resized pages
    const top_page = new_pdf.addPage([width, height/2])
-   const bottom_right_page = new_pdf.addPage([width/2, height/2])
 
    //Embed the first part
    top_page.drawPage(new_page_dim, {
@@ -51,13 +53,16 @@ async function split_pdf(pdf_file, output_file){
       height: height,
    })
 
-   //Embed the second part
-   bottom_right_page.drawPage(new_page_dim, {
-      x: -width/2 + config.segunda.x,
-      y: 0 + config.segunda.y,
-      width: width,
-      height: height,
-   })
+   if(INCLUDE_SECOND_PART == true){
+      const bottom_right_page = new_pdf.addPage([width/2, height/2])
+      //Embed the second part
+      bottom_right_page.drawPage(new_page_dim, {
+         x: -width/2 + config.segunda.x,
+         y: 0 + config.segunda.y,
+         width: width,
+         height: height,
+      })
+   }
  
    //Save the new pdf to a different file
    const new_pdf_bytes = await new_pdf.save()
@@ -77,6 +82,12 @@ async function show_files_menu(file_to_show) {
    ])
 
    return items.selected_file
+
+}
+
+async function ask_tf(question, default_val) {
+   
+ return await confirm({message: question, default: default_val})
 
 }
 
@@ -111,6 +122,8 @@ async function main() {
    }
 
    const file_to_split = await show_files_menu(fs.readdirSync(".").filter(file => file.toLocaleLowerCase().endsWith("pdf")))
+
+   INCLUDE_SECOND_PART = await ask_tf("Include second part?", true);
 
    await split_pdf(file_to_split, config.output_file)
 
